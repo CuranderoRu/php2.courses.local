@@ -13,6 +13,7 @@ class User extends Model
 {
     private $name;
     private $login;
+    private $password;
     private $authenticated = false;
 
     public static function getCurrentUser(){
@@ -25,14 +26,24 @@ class User extends Model
     }
 
     public function authenticate($password){
-        $sql = new Db();
-        $login = $sql->checkParam($this->login);
-        $password = $sql->checkParam($password);
-        if($user = $sql->selectOne("SELECT * FROM users WHERE login = '{$login}' AND password = '{$password}'")){
+        $sql = Db::getInstance();
+        if($user = $sql->selectOne("SELECT * FROM users WHERE login = :login AND password = :password",
+            [
+            ':login' => $this->login,
+            ':password' => $password
+            ]
+        )
+        )
+        {
             $this->id = $user['id'];
             $this->name = $user['name'];
             $_SESSION['user'] = $this;
-            $sql->executeSQL("UPDATE users SET last_login = '{date('c')}' WHERE id={$user['id']}");
+            $sql->execute("UPDATE users SET last_login = :last_login WHERE id= :id",
+                [
+                ':last_login' => date('c'),
+                ':id' => $user['id']
+                ]
+            );
             $this->authenticated = true;
         }
     }
@@ -49,9 +60,8 @@ class User extends Model
 
     public static function getByID($id)
     {
-        $sql = new Db();
-        $id = $sql->checkParam($id);
-        $params = $sql->selectOne("SELECT * FROM users WHERE id = {$id}");
+        $sql = Db::getInstance();
+        $params = $sql->selectOne("SELECT * FROM users WHERE id = :id", [':id'=>$id]);
         if (is_null($params['id'])){
             return null;
         }else{
@@ -73,4 +83,21 @@ class User extends Model
         return $params['id'];
     }
 
+    public function save()
+    {
+        $arr = [
+            ':name' => $this->name,
+            ':login' => $this->login,
+            ':password' => $this->password,
+            ':last_login' => date('c')
+        ];
+        if(!$this->isExists()){
+            $this->createRecord($arr);
+        }else{
+            $arr[':id'] = $this->id;
+            $this->updateRecord($arr);
+        };
+        return true;
+
+    }
 }

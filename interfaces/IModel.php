@@ -6,8 +6,8 @@ interface IModel
 
     public function getTableName();
 
-    public static function getByID($id);
+    public function save();
 
-    public function initialize($params);
+    public function delete();
 
 }

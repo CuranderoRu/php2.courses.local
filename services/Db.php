@@ -9,37 +9,64 @@
 namespace app\services;
 
 
+use app\traits\TSingletone;
+
 class Db
 {
-    static $conn;
-    public function __construct()
-    {
+    use TSingletone;
+
+    private $conn = null;
+
+    private $config = [
+        'driver' => 'mysql',
+        'host' => 'localhost',
+        'login' => 'root',
+        'password' => '',
+        'database' => 'Megashop',
+        'charset' => 'utf8'
+    ];
+
+
+
+
+    private function prepareDsnString(){
+        return sprintf("%s:host=%s;dbname=%s;charset=%s",
+            $this->config['driver'],
+            $this->config['host'],
+            $this->config['database'],
+            $this->config['charset']
+            );
+    }
+
+    private function getConnection(){
         if($this->conn==null){
-            $this->conn = mysqli_connect(MYSQL_ADDRESS, MYSQL_LOGIN, MYSQL_PSW, MYSQL_DBNAME);
+            $this->conn = new \PDO($this->prepareDsnString(),$this->config['login'],$this->config['password']);
+            $this->conn->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
         }
-    }
-    public function checkParam($param){
-        return mysqli_real_escape_string($this->conn, $param);
-    }
-    public function executeSQL($stmt){
-        return mysqli_query($this->conn, $stmt);
+        return $this->conn;
     }
 
-    function selectAll($sql){
-        $res = $this->executeSQL($sql);
+
+
+    private function executeSQL($query_text, $params){
+        $pdoStatement = $this->getConnection()->prepare($query_text);
+        $pdoStatement->execute($params);
+        //var_dump($pdoStatement->errorInfo());
+        return $pdoStatement;
+    }
+
+    public function execute($query_text, $params = []){
+        return $this->executeSQL($query_text, $params);
+    }
+
+    function selectAll($sql, $params = []){
+        $res = $this->executeSQL($sql, $params);
         //var_dump($res);
-        if(count($res)>0){
-            return mysqli_fetch_all($res, MYSQLI_ASSOC);
-        }else{
-            return [];
-        }
-
+        return $res->fetchAll();
     }
 
-    function selectOne($sql){
-        $res = $this->executeSQL($sql);
-        //var_dump($res);
-        return mysqli_fetch_array($res, MYSQLI_ASSOC);
+    function selectOne($sql, $params = []){
+        return $this->selectAll($sql, $params)[0];
     }
 
 }

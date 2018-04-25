@@ -9,14 +9,14 @@
 namespace app\models;
 
 
-class Order extends User
+class Order extends Model
 {
     private $user;
     private $productList = [];
 
-    public function __construct(User $user)
+    public function __construct($id = null)
     {
-        $this->user = $user;
+        $this->id = $id;
     }
 
     public function save(){
@@ -41,21 +41,6 @@ class Order extends User
             $this->productList[$product->getId()] = new OrderItem($product,$quantity);
         }else{
             $currentProduct->setQuantity($currentProduct->getQuantity()+$quantity);
-        }
-    }
-
-
-    public static function getByID($id)
-    {
-        $sql = new Db();
-        $id = $sql->checkParam($id);
-        $params = $sql->selectOne("SELECT * FROM orders WHERE id = {$id}");
-        if (is_null($params['id'])){
-            return null;
-        }else{
-            $p = new Product();
-            $p->initializeProduct($params);
-            return $p;
         }
     }
 

@@ -18,28 +18,16 @@ class Product extends Model
     protected $price;
     protected $category;
 
-    public static function getByID($id){
-        $sql = new Db();
-        $id = $sql->checkParam($id);
-        $params = $sql->selectOne("SELECT * FROM items WHERE id = {$id}");
-        if (is_null($params['id'])){
-            return null;
-        }else{
-            $p = new Product();
-            $p->initialize($params);
-            return $p;
-        }
-    }
-
     public function getTableName()
     {
         return 'items';
     }
 
-    public function __construct($id=null)
+    public function __construct($id = null)
     {
         if (!is_null($id)){
-            $this->id = $this->obtainParams($id);
+            $this->id = $id;
+            $this->obtainParams();
         }
     }
 
@@ -47,16 +35,20 @@ class Product extends Model
         return !is_null($this->id);
     }
 
-    private function obtainParams($id, $params = null){
+    private function obtainParams($params = null){
         if (is_null($params)){
-            $params = $this->getOne($id);
+            $params = $this->getOne();
         }
         $this->id = $params['id'];
         $this->image_name = $params['image'];
         $this->name = $params['name'];
         $this->description = $params['comment'];
         $this->price = $params['price'];
-        $this->category = $params['category'];
+        if (is_null($params['category'])){
+            $this->category = new Category();
+        }else{
+            $this->category = new Category($params['category']);
+        }
         return $params['id'];
     }
 
@@ -81,7 +73,19 @@ class Product extends Model
     }
 
     public function save(){
-        //сохранить свойства в ИБ и присвоить id товару
+        $arr = [
+            ':category' => $this->category->getId(),
+            ':comment' => $this->description,
+            ':image' => $this->image_name,
+            ':name' => $this->name,
+            ':price' => $this->price
+        ];
+        if(!$this->isExists()){
+            $this->createRecord($arr);
+        }else{
+            $arr[':id'] = $this->id;
+            $this->updateRecord($arr);
+        };
         return true;
     }
 
