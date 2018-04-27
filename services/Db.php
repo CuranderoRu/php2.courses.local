@@ -69,4 +69,17 @@ class Db
         return $this->selectAll($sql, $params)[0];
     }
 
+    public function queryObject($sql, $params, $class)
+    {
+        $smtp = $this->executeSQL($sql, $params);
+        $smtp->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
+        return $smtp->fetch();
+    }
+
+    public function lastInsertId()
+    {
+        return $this->conn->lastInsertId();
+    }
+
+
 }

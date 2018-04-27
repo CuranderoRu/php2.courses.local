@@ -5,7 +5,10 @@ include $_SERVER['DOCUMENT_ROOT'] . "/../services/Autoloader.php";
 
 spl_autoload_register([new \app\services\Autoloader(), 'loadClass']);
 
-$product = new \app\models\Product(1);
+$product = \app\models\Product::getByID(1);
+var_dump($product);
+exit;
+
 $product->setDescription('Новое описание этого товара');
 $product->setImageName('newimage.jpg');
 $product->setName('Новое имя товара');

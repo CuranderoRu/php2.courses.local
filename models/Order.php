@@ -24,7 +24,7 @@ class Order extends Model
         return 1;
     }
 
-    public function getTableName()
+    public static function getTableName()
     {
         return 'orders';
     }

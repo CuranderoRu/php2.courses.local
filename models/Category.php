@@ -13,7 +13,7 @@ class Category extends Model
 {
     private $name = "";
 
-    public function getTableName()
+    public static function getTableName()
     {
         return 'categories';
     }

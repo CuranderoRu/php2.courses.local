@@ -8,53 +8,43 @@
 
 namespace app\models;
 
-use app\services\Db;
-
 class Product extends Model
 {
-    protected $image_name;
+    protected $image;
     protected $name;
     protected $description;
     protected $price;
+
+    /** @var  Category */
     protected $category;
 
-    public function getTableName()
+    /**
+     * Product constructor.
+     * @param $image
+     * @param $name
+     * @param $description
+     * @param $price
+     * @param $category
+     */
+    public function __construct($image = null, $name = null, $description = null, $price = null, Category $category = null)
+    {
+        parent::__construct();
+        $this->image = $image;
+        $this->name = $name;
+        $this->description = $description;
+        $this->price = $price;
+        $this->category = $category;
+    }
+
+    public static function getTableName()
     {
         return 'items';
     }
 
-    public function __construct($id = null)
+
+    public function setImage($image_name)
     {
-        if (!is_null($id)){
-            $this->id = $id;
-            $this->obtainParams();
-        }
-    }
-
-    public function isInit(){
-        return !is_null($this->id);
-    }
-
-    private function obtainParams($params = null){
-        if (is_null($params)){
-            $params = $this->getOne();
-        }
-        $this->id = $params['id'];
-        $this->image_name = $params['image'];
-        $this->name = $params['name'];
-        $this->description = $params['comment'];
-        $this->price = $params['price'];
-        if (is_null($params['category'])){
-            $this->category = new Category();
-        }else{
-            $this->category = new Category($params['category']);
-        }
-        return $params['id'];
-    }
-
-    public function setImageName($image_name)
-    {
-        $this->image_name = $image_name;
+        $this->image = $image_name;
     }
 
     public function setName($name)
@@ -74,9 +64,9 @@ class Product extends Model
 
     public function save(){
         $arr = [
-            ':category' => $this->category->getId(),
+            ':category' => $this->category->id,
             ':comment' => $this->description,
-            ':image' => $this->image_name,
+            ':image' => $this->image,
             ':name' => $this->name,
             ':price' => $this->price
         ];

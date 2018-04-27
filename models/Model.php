@@ -6,18 +6,35 @@ abstract class Model implements IModel
 {
     protected $id;
 
-    public function getOne()
+    /** @var  Db */
+    protected $db;
+
+    /**
+     * Model constructor.
+     */
+    public function __construct()
     {
-        $db = Db::getInstance();
-        $tableName = $this->getTableName();
-        $sql = "SELECT * FROM {$tableName} WHERE id = :id";
-        return $db->selectOne($sql, [':id' => $this->id]);
+        $this->db = Db::getInstance();
     }
 
-    public function getAll()
+    public function isInit(){
+        return !is_null($this->id);
+    }
+
+
+    public static function getByID($id)
     {
         $db = Db::getInstance();
-        $tableName = $this->getTableName();
+        $tableName = static::getTableName();
+        $sql = "SELECT * FROM {$tableName} WHERE id = :id";
+        //return $db->selectOne($sql, [':id' => $this->id]);
+        return $db->queryObject($sql, [':id' => $id], get_called_class());
+    }
+
+    public static function getAll()
+    {
+        $db = Db::getInstance();
+        $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName}";
         return $db->selectAll($sql);
     }
@@ -44,7 +61,6 @@ abstract class Model implements IModel
 
     protected function createRecord($fieldsArray){
         echo 'createRecord <br>';
-        $db = Db::getInstance();
         $tableName = $this->getTableName();
         $sql = "INSERT INTO {$tableName} (";
         foreach ($fieldsArray as $key => $value) {
@@ -56,15 +72,12 @@ abstract class Model implements IModel
             $sql .= "{$key}, ";
         }
         $sql = substr($sql,0, strlen($sql)-2) . ");";
-        $res = $db->execute($sql, $fieldsArray);
-        $sql = "SELECT MAX(id) AS id FROM {$tableName}";
-        $res = $db->selectOne($sql);
-        $this->id = $res['id'];
+        $res = $this->db->execute($sql, $fieldsArray);
+        $this->id = $this->db->lastInsertId();
     }
 
     protected function updateRecord($fieldsArray){
         echo 'updateRecord <br>';
-        $db = Db::getInstance();
         $tableName = $this->getTableName();
         $sql = "UPDATE {$tableName} SET ";
         foreach ($fieldsArray as $key => $value) {
@@ -74,11 +87,12 @@ abstract class Model implements IModel
         }
         $sql = substr($sql,0, strlen($sql)-2);
         $sql .= " WHERE id = :id";
-        return $db->execute($sql, $fieldsArray);
+        return $this->db->execute($sql, $fieldsArray);
     }
 
     protected function isExists(){
-        $res = $this->getOne();
+        $tableName = $this->getTableName();
+        $res = $this->db->selectOne("SELECT id FROM {$tableName} WHERE id = :id", [':id', $this->id]);
         if (is_null($res)){
             return false;
         }else{
