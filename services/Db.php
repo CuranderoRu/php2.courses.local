@@ -49,6 +49,7 @@ class Db
 
 
     private function executeSQL($query_text, $params){
+        //echo 'DB::executeSQL <br>';
         $pdoStatement = $this->getConnection()->prepare($query_text);
         $pdoStatement->execute($params);
         //var_dump($pdoStatement->errorInfo());
@@ -56,24 +57,36 @@ class Db
     }
 
     public function execute($query_text, $params = []){
+        //echo 'DB::execute <br>';
         return $this->executeSQL($query_text, $params);
     }
 
     function selectAll($sql, $params = []){
-        $res = $this->executeSQL($sql, $params);
+        //echo 'DB::selectAll <br>';
+        $res = $this->execute($sql, $params);
         //var_dump($res);
         return $res->fetchAll();
     }
 
     function selectOne($sql, $params = []){
+        //echo '<p>DB::selectOne</p>';
         return $this->selectAll($sql, $params)[0];
     }
 
     public function queryObject($sql, $params, $class)
     {
+        //echo 'DB::queryObject <br>';
         $smtp = $this->executeSQL($sql, $params);
         $smtp->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
         return $smtp->fetch();
+    }
+
+    public function queryObjects($sql, $params, $class)
+    {
+        //echo 'DB::queryObject <br>';
+        $smtp = $this->executeSQL($sql, $params);
+        $smtp->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
+        return $smtp->fetchAll();
     }
 
     public function lastInsertId()

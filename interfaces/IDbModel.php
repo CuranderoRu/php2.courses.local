@@ -1,6 +1,6 @@
 <?php
 namespace app\interfaces;
-interface IModel
+interface IDbModel
 {
     public static function getAll();
 
@@ -11,7 +11,5 @@ interface IModel
     public function save();
 
     public function delete();
-
-    public function isInit();
 
 }

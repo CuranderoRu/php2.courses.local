@@ -8,7 +8,7 @@
 
 namespace app\models;
 
-class Product extends Model
+class Product extends DbModel
 {
     protected $image;
     protected $name;
@@ -26,7 +26,7 @@ class Product extends Model
      * @param $price
      * @param $category
      */
-    public function __construct($image = null, $name = null, $description = null, $price = null, Category $category = null)
+    public function __construct($image = null, $name = null, $description = null, $price = null, $category = null)
     {
         parent::__construct();
         $this->image = $image;
@@ -35,6 +35,48 @@ class Product extends Model
         $this->price = $price;
         $this->category = $category;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return null
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @return null
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return null
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @return null
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+
 
     public static function getTableName()
     {
@@ -62,22 +104,6 @@ class Product extends Model
         $this->price = $price;
     }
 
-    public function save(){
-        $arr = [
-            ':category' => $this->category->id,
-            ':comment' => $this->description,
-            ':image' => $this->image,
-            ':name' => $this->name,
-            ':price' => $this->price
-        ];
-        if(!$this->isExists()){
-            $this->createRecord($arr);
-        }else{
-            $arr[':id'] = $this->id;
-            $this->updateRecord($arr);
-        };
-        return true;
-    }
 
 
 }

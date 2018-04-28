@@ -9,7 +9,7 @@
 namespace app\models;
 
 
-class Category extends Model
+class Category extends DbModel
 {
     private $name = "";
 
@@ -18,26 +18,19 @@ class Category extends Model
         return 'categories';
     }
 
-    public function __construct($id = null)
+    public function __construct($name = null)
     {
-        if (!is_null($id)){
-            $this->id = $id;
-            $this->obtainParams();
-        }
+        parent::__construct();
+        $this->name = $name;
     }
 
-    private function obtainParams($params = null){
-        if (is_null($params)){
-            $params = $this->getOne();
-        }
-        $this->id = $params['id'];
-        $this->name = $params['name'];
-        return $params['id'];
-    }
-
-
-    public function save()
+    /**
+     * @return null|string
+     */
+    public function getName()
     {
-        // TODO: Implement save() method.
+        return $this->name;
     }
+
+
 }

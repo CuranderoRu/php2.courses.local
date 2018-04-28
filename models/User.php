@@ -9,7 +9,7 @@
 namespace app\models;
 use app\services\Db;
 
-class User extends Model
+class User extends DbModel
 {
     private $name;
     private $login;

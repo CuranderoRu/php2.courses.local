@@ -9,19 +9,21 @@
 namespace app\models;
 
 
-class Order extends Model
+class Order extends DbModel
 {
     private $user;
-    private $productList = [];
+    private $isFinalized = 0;
 
-    public function __construct($id = null)
+    public function __construct(User $user = null)
     {
-        $this->id = $id;
+        parent::__construct();
+        $this->user = $user;
     }
 
-    public function save(){
-        //сохранить свойства в ИБ и присвоить id заказу
-        return 1;
+    public function finalizeOrder()
+    {
+        $this->isFinalized = 1;
+        $this->save();
     }
 
     public static function getTableName()
@@ -44,12 +46,4 @@ class Order extends Model
         }
     }
 
-    private function obtainParams($id, $params = null)
-    {
-        if (is_null($params)){
-            $params = $this->getOne($id);
-        }
-        $this->id = $params['id'];
-        return $params['id'];
-    }
 }
