@@ -2,6 +2,9 @@
 header('Content-Type: text/html;charset=utf-8');
 include_once $_SERVER['DOCUMENT_ROOT'] . "/../config/main.php";
 include $_SERVER['DOCUMENT_ROOT'] . "/../services/Autoloader.php";
+include $_SERVER['DOCUMENT_ROOT'] . "/../vendor/autoload.php";
+
+
 
 spl_autoload_register([new \app\services\Autoloader(), 'loadClass']);
 
@@ -12,6 +15,6 @@ $controllerClass = CONTROLLERS_NAMESPACE . ucfirst($controllerName) . "Controlle
 
 if (class_exists($controllerClass)){
     /** @var  $controller */
-    $controller = new $controllerClass;
+    $controller = new $controllerClass(new \app\services\Renderer());
     $controller->runAction($actionName);
 }

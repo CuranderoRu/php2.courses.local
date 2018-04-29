@@ -9,6 +9,7 @@
 namespace app\controllers;
 
 
+use app\models\Comment;
 use app\models\Product;
 
 class ProductController extends Controller
@@ -24,7 +25,13 @@ class ProductController extends Controller
     }
 
     public function actionDisplay(){
-        echo 'actionDisplay';
+        $this->useLayout = false;
+        $product = Product::getByID($_GET['id']);
+        $comments = Comment::getAll([':item'=>$_GET['id']]);
+        echo $this->render('itempage', [
+                                                'product'=>$product,
+                                                'comments'=>$comments
+                                                ]);
     }
 
     public function actionCard(){

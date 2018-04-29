@@ -9,6 +9,7 @@
 namespace app\controllers;
 
 
+use app\interfaces\IRenderer;
 use app\models\Category;
 
 abstract class Controller
@@ -16,7 +17,18 @@ abstract class Controller
     private $action;
     private $defaultAction = 'index';
     private $layout = "shop";
-    private $useLayout = true;
+    protected $useLayout = true;
+    private $renderer;
+
+    /**
+     * Controller constructor.
+     * @param $renderer
+     */
+    public function __construct(IRenderer $renderer)
+    {
+        $this->renderer = $renderer;
+    }
+
 
     public function runAction($action = null){
         $this->action = $action ?: $this->defaultAction;
@@ -42,14 +54,11 @@ abstract class Controller
         }
     }
 
-
     public function renderTemplate($template, $params = []){
-        ob_start();
-        extract($params);
-        $templatePath = TEMPLATES_DIR . DS . $template . ".php";
-        include $templatePath;
-        return ob_get_clean();
+        return $this->renderer->render($template, $params);
     }
+
+
 
 
 }

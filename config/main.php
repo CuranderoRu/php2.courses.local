@@ -10,4 +10,6 @@ define("PICS_DIR", ROOT_DIR . "/");
 define("DS", DIRECTORY_SEPARATOR);
 define("CONTROLLERS_NAMESPACE", 'app\controllers\\');
 define("DEFAULT_CONTROLLER", 'product');
+define("TWIG_CACHE_DIR", ROOT_DIR . "/views/compilation_cache");
+
 

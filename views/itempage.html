@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Megashop</title>
+    <link rel="stylesheet" type="text/css" href="../css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="../css/shop.css">
+</head>
+
+<body>
+    <div class="header"><a href="index.php">My shop</a></div>
+    <div class="container">
+        <div>
+            <div class="item_capture">{{product.getName()}}</div>
+            <img src="../img/{{product.getImage()}}" alt="{{product.getImage()}}">
+            <div>{{product.getDescription()}}</div>
+            <div class="item_price">Цена: {{product.getPrice()}}</div>
+            <div class="comments">
+                <form action="?c=product&a=addcomment&id={{product.getId()}}" method="post">
+                    <p><b>Ваше имя:</b><br>
+                        <input type="text" name="author" size="25">
+                    </p>
+                    <p><b>Комментарий:</b><br>
+                        <textarea name="comment"></textarea>
+                    </p>
+                    <button type="submit">Отправить</button>
+                </form>
+                <br>
+                Комментарии покупателей:
+                {% for comment in comments %}
+                    <div class="comment_section">
+                        <div class="comment_author">{{comment.getCommentName()}} wrote on {{comment.getCommentDate()}}</div>
+                        <div class="comment_content">{{comment.getComment()}}</div>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
