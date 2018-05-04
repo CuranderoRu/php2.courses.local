@@ -14,15 +14,24 @@ use app\interfaces\IRenderer;
 class TwigRenderer implements IRenderer
 {
 
-    public function render($template, $params = [])
+    protected $twig;
+    /**
+     * TwigRenderer constructor.
+     */
+    public function __construct()
     {
-
         $loader = new \Twig_Loader_Filesystem(TEMPLATES_DIR);
-        $twig = new \Twig_Environment($loader, array(
+        $this->twig = new \Twig_Environment($loader, array(
             'cache' => TWIG_CACHE_DIR,
             'auto_reload' => true
         ));
-        return $twig->render('itempage.html', $params);
+
+    }
+
+    public function render($template, $params = [])
+    {
+
+        return $this->twig->render($template . '.html', $params);
 
     }
 }
