@@ -9,7 +9,7 @@
 namespace app\models;
 
 
-class Comment extends DbModel
+class Comment extends DataEntity
 {
     private $item;
     private $comment_date;
@@ -18,7 +18,6 @@ class Comment extends DbModel
 
     public function __construct($item = null, $comment_date = null, $comment_name = null, $comment = null)
     {
-        parent::__construct();
         $this->item = $item;
         $this->comment_date = $comment_date;
         $this->comment_name = $comment_name;
@@ -26,10 +25,6 @@ class Comment extends DbModel
     }
 
 
-    public static function getTableName()
-    {
-        return 'comments';
-    }
 
     /**
      * @return mixed

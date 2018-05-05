@@ -51,7 +51,7 @@ class __TwigTemplate_e7dc81463200005bdfcfad227e25c3bcd72662b82c41a5ba7f8dfc5994b
         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, ($context["product"] ?? null), "getPrice", array(), "method"), "html", null, true);
         echo "</div>
             <div class=\"comments\">
-                <form action=\"?c=product&a=addcomment&id=";
+                <form action=\"/product/addcomment?id=";
         // line 18
         echo twig_escape_filter($this->env, twig_get_attribute($this->env, $this->source, ($context["product"] ?? null), "getId", array(), "method"), "html", null, true);
         echo "\" method=\"post\">

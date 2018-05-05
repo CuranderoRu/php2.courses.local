@@ -9,18 +9,12 @@
 namespace app\models;
 
 
-class Category extends DbModel
+class Category extends DataEntity
 {
     private $name = "";
 
-    public static function getTableName()
-    {
-        return 'categories';
-    }
-
     public function __construct($name = null)
     {
-        parent::__construct();
         $this->name = $name;
     }
 

@@ -15,7 +15,7 @@
             <div>{{product.getDescription()}}</div>
             <div class="item_price">Цена: {{product.getPrice()}}</div>
             <div class="comments">
-                <form action="?c=product&a=addcomment&id={{product.getId()}}" method="post">
+                <form action="/product/addcomment?id={{product.getId()}}" method="post">
                     <p><b>Ваше имя:</b><br>
                         <input type="text" name="author" size="25">
                     </p>

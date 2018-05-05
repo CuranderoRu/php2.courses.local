@@ -7,97 +7,92 @@
  */
 
 namespace app\models;
-use app\services\Db;
 
-class User extends DbModel
+class User extends DataEntity
 {
     private $name;
     private $login;
     private $password;
     private $authenticated = false;
+    private $last_login;
 
     public static function getCurrentUser(){
         return $_SESSION['user'];
     }
 
-    public function __construct($login)
+    public function __construct($login = null)
     {
         $this->login = $login;
     }
 
-    public function authenticate($password){
-        $sql = Db::getInstance();
-        if($user = $sql->selectOne("SELECT * FROM users WHERE login = :login AND password = :password",
-            [
-            ':login' => $this->login,
-            ':password' => $password
-            ]
-        )
-        )
-        {
-            $this->id = $user['id'];
-            $this->name = $user['name'];
-            $_SESSION['user'] = $this;
-            $sql->execute("UPDATE users SET last_login = :last_login WHERE id= :id",
-                [
-                ':last_login' => date('c'),
-                ':id' => $user['id']
-                ]
-            );
-            $this->authenticated = true;
-        }
+    /**
+     * @return mixed
+     */
+    public function getLogin()
+    {
+        return $this->login;
     }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @param mixed $last_login
+     */
+    public function setLastLogin($last_login)
+    {
+        $this->last_login = $last_login;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param bool $authenticated
+     */
+    public function setAuthenticated($authenticated)
+    {
+        $this->authenticated = $authenticated;
+    }
+
+    /**
+     * @param null $login
+     */
+    public function setLogin($login)
+    {
+        $this->login = $login;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastLogin()
+    {
+        return $this->last_login;
+    }
+
+
 
     public function isAuthenticated(){
         return $this->authenticated;
     }
 
-
-    public static function getTableName()
+    /**
+     * @return mixed
+     */
+    public function getName()
     {
-        return 'users';
+        return $this->name;
     }
 
-    public static function getByID($id)
-    {
-        $sql = Db::getInstance();
-        $params = $sql->selectOne("SELECT * FROM users WHERE id = :id", [':id'=>$id]);
-        if (is_null($params['id'])){
-            return null;
-        }else{
-            $p = new User($params['id']);
-            $p->initialize($params);
-            return $p;
-        }
-
-    }
-
-    private function obtainParams($id, $params = null)
-    {
-        if (is_null($params)){
-            $params = $this->getOne($id);
-        }
-        $this->id = $params['id'];
-        $this->name = $params['name'];
-        $this->login = $params['login'];
-        return $params['id'];
-    }
-
-    public function save()
-    {
-        $arr = [
-            ':name' => $this->name,
-            ':login' => $this->login,
-            ':password' => $this->password,
-            ':last_login' => date('c')
-        ];
-        if(!$this->isExists()){
-            $this->createRecord($arr);
-        }else{
-            $arr[':id'] = $this->id;
-            $this->updateRecord($arr);
-        };
-        return true;
-
-    }
 }

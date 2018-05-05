@@ -9,19 +9,32 @@
 namespace app\models;
 
 
-class OrderItem
+class OrderItem extends DataEntity
 {
     private $product;
+    private $order_id;
+    private $item_id;
     private $quantity = 0;
     /**
      * OrderItem constructor.
-     * @param $product
+     * @param Product $product
+     * @param mixed $quantity
      */
-    public function __construct($product, $quantity)
+    public function __construct(Product $product, $quantity)
     {
         $this->product = $product;
+        $this->item_id = $product->getId();
         $this->quantity = $quantity;
     }
+
+    /**
+     * @param mixed $order_id
+     */
+    public function setOrderId($order_id)
+    {
+        $this->order_id = $order_id;
+    }
+
 
     /**
      * @return null
@@ -44,7 +57,7 @@ class OrderItem
      */
     public function setQuantity($quantity)
     {
-        $this->quantity = $quantity;
+        $this->quantity = $this->quantity + $quantity;
     }
 
 

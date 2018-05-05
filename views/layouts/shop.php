@@ -14,12 +14,14 @@
     <nav>
         <ul class="main_menu">
             <li><a href="../../">Главная</a></li>
-            <li class="cart_button"><a href="../../?c=cart">Корзина (0)</a>
+            <li class="cart_button"><a href="../cart">Корзина (0)</a>
                 <div class="cart_menu" id="cart_menu">
-                   {cart_menu_items}
+                    <?php foreach ($cart_menu_items as $item_text=>$item_link): ?>
+                        <div class="cart_menu__item"><a href="<?=$item_link?>"><?=$item_text?></a></div>
+                    <?php endforeach;?>
                 </div>
             </li>
-            <li><a href="../../?c=admin">Админка</a></li>
+            <li><a href="../admin">Админка</a></li>
         </ul>
     </nav>
     <div class="container">

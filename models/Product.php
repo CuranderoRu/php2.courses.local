@@ -8,7 +8,7 @@
 
 namespace app\models;
 
-class Product extends DbModel
+class Product extends DataEntity
 {
     protected $image;
     protected $name;
@@ -28,7 +28,6 @@ class Product extends DbModel
      */
     public function __construct($image = null, $name = null, $description = null, $price = null, $category = null)
     {
-        parent::__construct();
         $this->image = $image;
         $this->name = $name;
         $this->description = $description;
@@ -78,10 +77,6 @@ class Product extends DbModel
 
 
 
-    public static function getTableName()
-    {
-        return 'items';
-    }
 
 
     public function setImage($image_name)
