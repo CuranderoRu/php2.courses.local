@@ -8,7 +8,7 @@
 
 namespace app\models\repositories;
 
-use app\models\Comment;
+use app\models\entities\Comment;
 use app\models\Repository;
 
 class CommentRepository extends Repository

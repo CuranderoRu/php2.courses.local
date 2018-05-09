@@ -6,8 +6,10 @@
  * Time: 21:22
  */
 
-namespace app\models;
+namespace app\models\entities;
 
+
+use app\models\DataEntity;
 
 class Comment extends DataEntity
 {

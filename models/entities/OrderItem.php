@@ -6,8 +6,10 @@
  * Time: 17:13
  */
 
-namespace app\models;
+namespace app\models\entities;
 
+
+use app\models\DataEntity;
 
 class OrderItem extends DataEntity
 {

@@ -8,7 +8,7 @@
 
 namespace app\models\repositories;
 
-use app\models\Category;
+use app\models\entities\Category;
 use app\models\Repository;
 
 

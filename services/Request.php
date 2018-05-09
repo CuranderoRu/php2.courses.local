@@ -7,13 +7,13 @@
  */
 
 namespace app\services;
-
-
-use app\traits\TSingletone;
+class BadRequestException extends \Exception{
+    protected $message = "Invalid Action Name";
+    protected $code = 404;
+}
 
 class Request
 {
-    use TSingletone;
 
     private $requestString;
     private $controllerName;
@@ -22,7 +22,10 @@ class Request
     private $post;
     private $method;
 
-    private function init_instance()
+    /**
+     * Request constructor.
+     */
+    public function __construct()
     {
         $this->requestString = $_SERVER['REQUEST_URI'];
         $pattern = "#(?P<controller>\w+)[/]?(?P<action>\w+)?[/]?[?]?(?P<params>.*)#ui";
@@ -32,6 +35,8 @@ class Request
             $this->actionName = $matches['action'][0];
             $this->params = $_REQUEST;
             $this->post = $_POST;
+        }else{
+            throw new BadRequestException();
         }
     }
 

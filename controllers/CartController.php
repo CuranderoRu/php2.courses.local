@@ -9,8 +9,8 @@
 namespace app\controllers;
 
 
+use app\base\App;
 use app\models\repositories\ProductRepository;
-use app\services\Request;
 
 class CartController extends Controller
 {
@@ -38,23 +38,24 @@ class CartController extends Controller
 
     public function actionAdd(){
         $receivedValue = null;
-        foreach (Request::getInstance()->getPost() as $key=>$value){
+        foreach (App::call()->request->getPost() as $key=>$value){
             $receivedValue = $key;
         }
         if (is_null($receivedValue))return;
         if ($receivedValue=="")return;
         $obj = json_decode($receivedValue);
-        if (is_null($obj)){
-            echo json_encode(["status" => "error", "message"=>"Что-то пошло не так. Товар не добавлен в корзину.", "id"=>$obj->id]);
-        }else{
+        $json = json_encode(["status" => "error", "message"=>"Что-то пошло не так. Товар не добавлен в корзину.", "id"=>$obj->id]);
+        if (!is_null($obj)){
             $product = null;
             if ($product = (new ProductRepository())->getByID($obj->id)){
+            //if ($product = (App::call()->getRepository("ProductRepository"))->getByID($obj->id)){
                 $this->session->addToCart($product, $obj->quantity);
-                echo json_encode(["status" => "done", "message"=>"Товар " . $product->getName() . " в количестве " . $obj->quantity . " успешно добавлен в корзину.", "id"=>$obj->id]);
+                $json = json_encode(["status" => "done", "message"=>"Товар " . $product->getName() . " в количестве " . $obj->quantity . " успешно добавлен в корзину.", "id"=>$obj->id]);
             }else{
-                echo json_encode(["status" => "error", "message"=>"Товар c id " . $obj->id . " не добавлен в корзину.", "id"=>$obj->id]);
+                $json = json_encode(["status" => "error", "message"=>"Товар c id " . $obj->id . " не добавлен в корзину.", "id"=>$obj->id]);
             }
-        }
+        };
+        echo $json;
 
     }
 

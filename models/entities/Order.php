@@ -6,9 +6,10 @@
  * Time: 17:12
  */
 
-namespace app\models;
+namespace app\models\entities;
 
 
+use app\models\DataEntity;
 use app\models\repositories\OrderItemRepository;
 use app\models\repositories\OrderRepository;
 

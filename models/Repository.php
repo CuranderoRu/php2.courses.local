@@ -8,6 +8,7 @@
 
 namespace app\models;
 
+use app\base\App;
 use app\services\Db;
 
 abstract class Repository
@@ -21,7 +22,7 @@ abstract class Repository
      */
     public function __construct()
     {
-        $this->db = Db::getInstance();
+        $this->db = App::call()->db;
     }
 
     public function getByID($id)

@@ -8,7 +8,7 @@
 
 namespace app\controllers;
 
-use app\services\Request;
+use app\base\App;
 
 class UserController extends Controller
 {
@@ -20,14 +20,14 @@ class UserController extends Controller
     }
 
     public function actionLogin(){
-        if (Request::getInstance()->getMethod()=="GET"){
+        if (App::call()->request->getMethod()=="GET"){
             $this->useLayout = false;
             echo $this->render('login', [
                 'message'=>"Здравствуйте!"
             ]);
         }else{
-            $login = Request::getInstance()->getParams()['login'];
-            $password = Request::getInstance()->getParams()['password'];
+            $login = App::call()->request->getParams()['login'];
+            $password = App::call()->request->getParams()['password'];
             if($this->session->authenticate($login, $password)){
                 header('Location: http://'.$_SERVER['HTTP_HOST']);
             }else{

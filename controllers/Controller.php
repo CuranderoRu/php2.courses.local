@@ -8,9 +8,15 @@
 
 namespace app\controllers;
 
+use app\base\App;
 use app\interfaces\IRenderer;
 use app\models\repositories\CategoryRepository;
 use app\services\Session;
+
+class IncorrectActionException extends \Exception{
+    protected $message = "Invalid Action Name";
+    protected $code = 404;
+}
 
 abstract class Controller
 {
@@ -26,10 +32,10 @@ abstract class Controller
      * @param IRenderer $renderer
      * @param Session $session
      */
-    public function __construct(IRenderer $renderer, Session $session)
+    public function __construct(IRenderer $renderer)
     {
         $this->renderer = $renderer;
-        $this->session = $session;
+        $this->session = App::call()->session;
     }
 
 
@@ -39,7 +45,7 @@ abstract class Controller
         if(method_exists($this, $method)){
             $this->$method();
         }else{
-            echo "404";
+            throw new IncorrectActionException();
         }
 
     }

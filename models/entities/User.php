@@ -6,7 +6,9 @@
  * Time: 17:11
  */
 
-namespace app\models;
+namespace app\models\entities;
+
+use app\models\DataEntity;
 
 class User extends DataEntity
 {

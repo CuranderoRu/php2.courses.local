@@ -9,6 +9,7 @@
 namespace app\services;
 
 
+use app\base\App;
 use app\interfaces\IRenderer;
 
 class TwigRenderer implements IRenderer
@@ -20,9 +21,9 @@ class TwigRenderer implements IRenderer
      */
     public function __construct()
     {
-        $loader = new \Twig_Loader_Filesystem(TEMPLATES_DIR);
+        $loader = new \Twig_Loader_Filesystem(App::call()->config['templates_dir']);
         $this->twig = new \Twig_Environment($loader, array(
-            'cache' => TWIG_CACHE_DIR,
+            'cache' => App::call()->config['twig_cache_dir'],
             'auto_reload' => true
         ));
 

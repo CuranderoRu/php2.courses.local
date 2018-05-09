@@ -8,32 +8,48 @@
 
 namespace app\services;
 
-use app\models\Order;
-use app\models\Product;
+use app\base\App;
+use app\models\entities\Order;
+use app\models\entities\Product;
 use app\models\repositories\UserRepository;
 use app\traits\TSingletone;
 
-use app\models\User;
+use app\models\entities\User;
 
 class Session
 {
-    use TSingletone;
     /** @var  User $user*/
     private $user;
     /** @var Order $order*/
     private $order;
 
-    private function init_instance(){
+    /**
+     * Session constructor.
+     */
+    public function __construct()
+    {
         session_start();
         $this->user = $_SESSION['user'];
         $this->order = $_SESSION['order'];
         if(is_null($this->user)){
-            $this->user = new User();
+            //$this->user = new User();
+            $this->user = App::call()->user;
             $_SESSION['user'] = $this->user;
-            $this->order = new Order();
+            //$this->order = new Order();
+            $this->order = App::call()->order;
             $this->order->setUser($this->user);
             $_SESSION['order'] = $this->order;
         }
+    }
+
+    public function get($key)
+    {
+        return $_SESSION[$key];
+    }
+
+    public function set($key, $value)
+    {
+        $_SESSION[$key] = $value;
     }
 
     public function authenticate($login, $password){
