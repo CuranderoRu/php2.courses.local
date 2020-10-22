@@ -1,22 +1,29 @@
+/.idea
 
-.idea/workspace.xml
-.idea/workspace.xml
-.idea/workspace.xml
-.idea/codeStyleSettings.xml
-.idea/workspace.xml
-.idea/codeStyleSettings.xml
-*.xml
-*.xml
-.idea/dataSources/979b1409-7319-40f3-a0f1-65dfb213e466/_metadata_/metadata
-*.xml
-.idea/dataSources/979b1409-7319-40f3-a0f1-65dfb213e466/_src_/schema/sys.zip
-*.len
-.idea/dataSources/979b1409-7319-40f3-a0f1-65dfb213e466/_metadata_/metadata_i
-*.at
-*.keystream
-*.xml
-*.xml
-*.xml
-*.xml
-*.iml
-*.xml
+# windows thumbnail cache
+Thumbs.db
+
+# composer vendor dir
+/vendor
+
+# composer itself is not needed
+composer.phar
+
+# Mac DS_Store Files
+.DS_Store
+
+# phpunit itself is not needed
+phpunit.phar
+# local phpunit config
+/phpunit.xml
+
+tests/_output/*
+tests/_support/_generated
+
+#vagrant folder
+/.vagrant
+
+#config folder
+/config/*
+/.idea/*
+
